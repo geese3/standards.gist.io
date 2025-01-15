@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>소상공인 기준 체크</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      label,
+      select {
+        display: block;
+        margin-bottom: 20px;
+      }
+      select {
+        width: 300px;
+        padding: 5px;
+      }
+      #result {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>소상공인 기준 체크</h1>
+
+    <label for="industry">업종을 선택하세요:</label>
+    <select id="industry">
+      <option value="">-- 업종을 선택하세요 --</option>
+    </select>
+
+    <label for="scale">매출 규모를 선택하세요:</label>
+    <select id="scale">
+      <option value="">-- 매출 규모를 선택하세요 --</option>
+    </select>
+
+    <label for="employee">상시 근로자 수를 선택하세요:</label>
+    <select id="employee">
+      <option value="">-- 상시 근로자 수를 선택하세요 --</option>
+    </select>
+
+    <button id="checkButton">기준 체크</button>
+    <div id="result"></div>
+
+    <script>
+      // JSON 데이터 직접 포함
+      document.addEventListener("DOMContentLoaded", () => {
+        const industrySelect = document.getElementById("industry");
+        const scaleSelect = document.getElementById("scale");
+        const employeeSelect = document.getElementById("employee");
+        const resultDiv = document.getElementById("result");
+        const checkButton = document.getElementById("checkButton");
+
+        // JSON 데이터 직접 포함
+        const jsonData = {
+          industries: [
+            {
+              name: "식료품 제조업",
+              code: "C10",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "음료 제조업",
+              code: "C11",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "의복, 의복액세서리 및 모피제품 제조업",
+              code: "C14",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "가죽, 가방 및 신발 제조업",
+              code: "C15",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "코크스, 연탄 및 석유정제품 제조업",
+              code: "C19",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "화학물질 및 화학제품 제조업 (의약품 제조업은 제외)",
+              code: "C20",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "의료용 물질 및 의약품 제조업",
+              code: "C21",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "비금속 광물제품 제조업",
+              code: "C23",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "1차 금속 제조업",
+              code: "C24",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "금속가공제품 제조업 (기계 및 가구 제조업은 제외)",
+              code: "C25",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "전자부품, 컴퓨터, 영상, 음향 및 통신장비 제조업",
+              code: "C26",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "전기장비 제조업",
+              code: "C28",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "그 밖의 기계 및 장비 제조업",
+              code: "C29",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "자동차 및 트레일러 제조업",
+              code: "C30",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "가구 제조업",
+              code: "C32",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "전기, 가스, 증기 및 공기조절 공급업",
+              code: "D",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "수도업",
+              code: "E36",
+              scale: "80억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "농업, 임업 및 어업",
+              code: "A",
+              scale: "80억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "광업",
+              code: "B",
+              scale: "80억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "담배 제조업",
+              code: "C12",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "섬유제품 제조업 (의복 제조업은 제외)",
+              code: "C13",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "목재 및 나무제품 제조업 (가구 제조업은 제외)",
+              code: "C16",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "펄프, 종이 및 종이제품 제조업",
+              code: "C17",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "인쇄 및 기록매체 복제업",
+              code: "C18",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "고무제품 및 플라스틱제품 제조업",
+              code: "C22",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "의료, 정밀, 광학기기 및 시계 제조업",
+              code: "C27",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "그 밖의 운송장비 제조업",
+              code: "C31",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "그 밖의 제품 제조업",
+              code: "C33",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "건설업",
+              code: "F",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "운수 및 창고업",
+              code: "H",
+              scale: "50억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "금융 및 보험업",
+              code: "K",
+              scale: "50억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "도매 및 소매업",
+              code: "G",
+              scale: "50억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "정보통신업",
+              code: "J",
+              scale: "30억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "수도, 하수 및 폐기물 처리, 원료재생업 (수도업 제외)",
+              code: "E",
+              scale: "30억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "부동산업",
+              code: "L",
+              scale: "30억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "전문ㆍ과학 및 기술 서비스업",
+              code: "M",
+              scale: "30억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "사업시설관리, 사업지원 및 임대 서비스업",
+              code: "N",
+              scale: "30억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "예술, 스포츠 및 여가 관련 서비스업",
+              code: "R",
+              scale: "30억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "산업용 기계 및 장비 수리업",
+              code: "C34",
+              scale: "120억원 이하",
+              employee: "10인 미만",
+            },
+            {
+              name: "숙박 및 음식점업",
+              code: "I",
+              scale: "10억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "교육 서비스업",
+              code: "P",
+              scale: "10억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "보건업 및 사회복지 서비스업",
+              code: "Q",
+              scale: "10억원 이하",
+              employee: "5인 미만",
+            },
+            {
+              name: "수리 및 기타 개인 서비스업",
+              code: "S",
+              scale: "10억원 이하",
+              employee: "5인 미만",
+            },
+          ],
+        };
+
+        const scaleRank = {
+          "10억원 이하": 1,
+          "30억원 이하": 2,
+          "50억원 이하": 3,
+          "80억원 이하": 4,
+          "120억원 이하": 5,
+        };
+
+        const employeeRank = {
+          "5인 미만": 1,
+          "10인 미만": 2,
+          "5인 이상": 3,
+          "10인 이상": 4,
+        };
+
+        // 업종 데이터 추가
+        jsonData.industries.forEach((industry) => {
+          const option = document.createElement("option");
+          option.value = JSON.stringify(industry);
+          option.textContent = `${industry.name} (${industry.code})`;
+          industrySelect.appendChild(option);
+        });
+
+        // 매출 규모 데이터 추가 (중복 제거)
+        const uniqueScales = [
+          ...new Set(jsonData.industries.map((i) => i.scale)),
+        ];
+        uniqueScales.forEach((scale) => {
+          const option = document.createElement("option");
+          option.value = scale;
+          option.textContent = scale;
+          scaleSelect.appendChild(option);
+        });
+
+        // 상시 근로자 수 데이터 추가 (중복 제거)
+        const uniqueEmployees = [
+          ...new Set(jsonData.industries.map((i) => i.employee)),
+        ];
+        uniqueEmployees.forEach((employee) => {
+          const option = document.createElement("option");
+          option.value = employee;
+          option.textContent = employee;
+          employeeSelect.appendChild(option);
+        });
+
+        // 소상공인 기준 체크
+        function checkEligibility() {
+          let selectedIndustry;
+
+          try {
+            selectedIndustry = industrySelect.value
+              ? JSON.parse(industrySelect.value)
+              : null;
+          } catch (error) {
+            console.error("Invalid JSON format:", error);
+            resultDiv.textContent =
+              "업종 데이터를 읽는 데 문제가 발생했습니다.";
+            resultDiv.style.color = "red";
+            return;
+          }
+
+          const selectedScale = scaleSelect.value.trim();
+          const selectedEmployee = employeeSelect.value.trim();
+
+          if (!selectedIndustry || !selectedScale || !selectedEmployee) {
+            resultDiv.textContent = "모든 항목을 선택해 주세요.";
+            resultDiv.style.color = "red";
+            return;
+          }
+
+          // 매출 규모 비교 (선택한 값이 기준을 초과하지 않아야 함)
+          const isScaleValid =
+            scaleRank[selectedScale] <= scaleRank[selectedIndustry.scale];
+
+          // 상시 근로자 수 비교 (선택한 값이 기준을 초과하지 않아야 함)
+          const isEmployeeValid =
+            employeeRank[selectedEmployee] <=
+            employeeRank[selectedIndustry.employee];
+
+          if (isScaleValid && isEmployeeValid) {
+            resultDiv.textContent = "소상공인 기준에 부합합니다.";
+            resultDiv.style.color = "green";
+          } else {
+            let message = "소상공인 기준에 부합하지 않습니다.";
+            if (!isScaleValid) {
+              message += `\n- 매출 규모는 '${selectedIndustry.scale}' 이하만 인정됩니다.`;
+            }
+            if (!isEmployeeValid) {
+              message += `\n- 상시 근로자 수는 '${selectedIndustry.employee}' 이하만 인정됩니다.`;
+            }
+            resultDiv.textContent = message;
+            resultDiv.style.color = "red";
+          }
+        }
+
+        // 버튼 클릭 이벤트 연결
+        checkButton.addEventListener("click", checkEligibility);
+      });
+    </script>
+  </body>
+</html>
