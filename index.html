@@ -410,6 +410,7 @@
               message += `\n- 상시 근로자 수는 '${selectedIndustry.employee}' 이하만 인정됩니다.`;
             }
             resultDiv.textContent = message;
+            resultDiv.innerHTML = message;
             resultDiv.style.color = "red";
           }
         }
