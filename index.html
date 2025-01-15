@@ -404,10 +404,10 @@
           } else {
             let message = "소상공인 기준에 부합하지 않습니다.";
             if (!isScaleValid) {
-              message += `\n- 매출 규모는 '${selectedIndustry.scale}' 이하만 인정됩니다.`;
+              message += `<br> - 매출 규모는 '${selectedIndustry.scale}' 이하만 인정됩니다.`;
             }
             if (!isEmployeeValid) {
-              message += `\n- 상시 근로자 수는 '${selectedIndustry.employee}' 이하만 인정됩니다.`;
+              message += `<br> - 상시 근로자 수는 '${selectedIndustry.employee}' 이하만 인정됩니다.`;
             }
             resultDiv.textContent = message;
             resultDiv.innerHTML = message;
